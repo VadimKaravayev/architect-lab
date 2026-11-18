@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/links
+    username: admin
+    password: admin
+app:
+  base-url: http://localhost:8080

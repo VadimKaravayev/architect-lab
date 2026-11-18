@@ -1,0 +1,25 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+
+### Create Link
+POST http://localhost:8080/api/v1/links
+Content-Type: application/json
+
+{
+  "url": "https://rozetka.com.ua/ua/newt-ne-bb-46/p390276756/?gad_source=1&gad_campaignid=24332534396&gbraid=0AAAAAD6tbga70FhxJBtS3OME5ms6stZxl&gclid=Cj0KCQiAtvXXBhC2ARIsAJc8SURn4MzkimwuTdPQz3SP_xQrVXt3Tbn6k_54FMm4dIT7YKsgH1q66WsaAlmWEALw_wcB"
+}
+
+###
+
+### Create Link
+POST http://localhost:8080/api/v1/links
+Content-Type: application/json
+
+{
+  "url": "javascript:alert(1)"
+}
+
+###
