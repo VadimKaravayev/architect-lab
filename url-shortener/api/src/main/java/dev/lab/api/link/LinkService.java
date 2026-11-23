@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class LinkService {
@@ -21,9 +22,8 @@ public class LinkService {
         Instant expiresAt = command.expiresAt();
         long id = linkRepository.nextId();
         String code = Base62.encode(id);
-        linkRepository.insert(code, url, expiresAt);
 
-        return new Link(code, url, expiresAt);
+        return linkRepository.insert(code, url, expiresAt);
     }
 
     private static void validateUrl(String url) {
@@ -43,6 +43,27 @@ public class LinkService {
         String host = uri.getHost();
         if (host == null || host.isEmpty()) {
             throw new InvalidUrlException("Host is empty");
+        }
+    }
+
+    public String resolve(String code) {
+        Optional<Link> maybeLink = linkRepository.findByCode(code);
+        Link link = maybeLink.orElseThrow(() -> new LinkNotFoundException("Link not found"));
+        boolean isDeleted = link.deletedAt() != null;
+        if (isExpired(link) || isDeleted) {
+            throw new LinkGoneException("Link is gone");
+        }
+        return link.longUrl();
+    }
+
+    private static boolean isExpired(Link link) {
+        return link.expiresAt() != null && link.expiresAt().isBefore(Instant.now());
+    }
+
+    public void delete(String code) {
+        DeleteResult deleteResult = linkRepository.markDeleted(code);
+        if (DeleteResult.NOT_FOUND == deleteResult) {
+            throw new LinkNotFoundException("Link, code: " + code + ", not found");
         }
     }
 }

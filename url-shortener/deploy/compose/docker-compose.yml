@@ -1,8 +1,10 @@
+name: "url-shortener"
+
 services:
   postgres:
     image: postgres:17
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_DB: links
       POSTGRES_USER: admin
@@ -12,6 +14,16 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d links"]
       interval: 5s
+
+  pgweb:
+    image: sosedoff/pgweb
+    environment:
+      PGWEB_DATABASE_URL: postgres://admin:admin@postgres:5432/links?sslmode=disable
+    ports:
+      - "8081:8081"
+    depends_on:
+        postgres:
+          condition: service_healthy
 
 volumes:
   postgres_data:

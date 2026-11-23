@@ -3,7 +3,8 @@ package dev.lab.api;
 import dev.lab.api.link.Base62;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 class Base62Test {
 
